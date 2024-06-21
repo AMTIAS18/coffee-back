@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/coffee/list").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/coffee").hasAnyRole("ADMIN", "CLIENT")
                 .requestMatchers(HttpMethod.GET, "/api/coffee/**").hasAnyRole("ADMIN", "CLIENT")
                 .requestMatchers(HttpMethod.POST, "/api/coffee/**").hasRole("ADMIN")
