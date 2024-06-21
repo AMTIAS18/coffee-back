@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CoffeeService {
@@ -24,5 +26,13 @@ public class CoffeeService {
         coffeeEntity.setImage64(imageBase64);
 
         return coffeeRepository.save(coffeeEntity);
+    }
+
+    public Optional<CoffeeEntity> findByName(String name) {
+        return coffeeRepository.findByName(name);
+    }
+
+    public List<CoffeeEntity> coffeeList() {
+        return coffeeRepository.findAll();
     }
 }
