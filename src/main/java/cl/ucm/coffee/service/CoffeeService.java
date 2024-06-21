@@ -35,4 +35,12 @@ public class CoffeeService {
     public List<CoffeeEntity> coffeeList() {
         return coffeeRepository.findAll();
     }
+
+    public CoffeeEntity updateCoffee(CoffeeEntity coffeeEntity) {
+        return coffeeRepository.save(coffeeEntity);
+    }
+
+    public void deleteCoffee(int idCoffee) {
+        coffeeRepository.deleteById((long) idCoffee);
+    }
 }
