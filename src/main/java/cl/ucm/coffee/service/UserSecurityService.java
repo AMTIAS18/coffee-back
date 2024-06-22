@@ -45,7 +45,7 @@ public class UserSecurityService implements UserDetailsService {
     }
 
     private String[] getAuthorities(String role) {
-        if ("ADMIN".equals(role) || "CUSTOMER".equals(role)) {
+        if ("ADMIN".equals(role) || "CLIENT".equals(role)) {
             return new String[] {"random_order"};
         }
 
