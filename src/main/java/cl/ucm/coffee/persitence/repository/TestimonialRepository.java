@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TestimonialRepository extends JpaRepository<TestimonialsEntity, Integer> {
+    List<TestimonialsEntity> findByIdCoffee(int idCoffee);
 }

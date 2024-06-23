@@ -17,5 +17,10 @@ public class TestimonialController {
     public ResponseEntity<?> create(@RequestBody TestimonialsEntity testimonialsEntity) {
         return testimonialService.createTestimonial(testimonialsEntity);
     }
+
+    @GetMapping("/findByCoffeeId/{idCoffee}")
+    public ResponseEntity<?> findByCoffeeId(@PathVariable int idCoffee) {
+        return testimonialService.findByCoffeeId(idCoffee);
+    }
 }
 

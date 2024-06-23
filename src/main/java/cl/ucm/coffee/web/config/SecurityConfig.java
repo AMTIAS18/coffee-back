@@ -35,15 +35,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api/coffee/**").hasAnyRole("ADMIN", "CLIENT")
-                .requestMatchers(HttpMethod.POST, "/api/coffee/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/coffee/coffeeList").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/coffee/findByName").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/coffee/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/coffee/create").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/coffee/updateCoffee").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/coffee/deleteCoffee").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.POST, "/api/testimonials/create").hasRole("CLIENT")
-                .requestMatchers(HttpMethod.GET, "/api/testimonials/**").permitAll()
-                .anyRequest()
-                .authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/testimonials/findByCoffeeId/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
