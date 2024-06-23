@@ -40,9 +40,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/coffee/coffeeList").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/coffee/findByName").permitAll()
 
-                .requestMatchers(HttpMethod.POST, "/api/testimonials/create").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/testimonials/create").hasRole("CLIENT")
                 .requestMatchers(HttpMethod.GET, "/api/testimonials/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/error").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
