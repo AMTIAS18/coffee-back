@@ -1,6 +1,5 @@
 package cl.ucm.coffee.web.controller;
 
-
 import cl.ucm.coffee.persitence.entity.CoffeeEntity;
 import cl.ucm.coffee.persitence.repository.CoffeeRepository;
 import cl.ucm.coffee.service.CoffeeService;
@@ -77,8 +76,7 @@ public class CoffeeController {
                 coffeeEntity.setPrice(price);
 
                 if (foto != null && !foto.isEmpty()) {
-                    String imageBase64 = Base64.getEncoder().encodeToString(foto.getBytes());
-                    coffeeEntity.setImage64(imageBase64);
+                    coffeeEntity.setImage64(foto.getBytes());
                 }
 
                 CoffeeEntity updatedCoffee = coffeeRepository.save(coffeeEntity);

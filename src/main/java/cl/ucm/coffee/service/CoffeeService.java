@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +21,7 @@ public class CoffeeService {
         coffeeEntity.setName(name);
         coffeeEntity.setPrice(price);
         coffeeEntity.setDescription(description);
-        String imageBase64 = Base64.getEncoder().encodeToString(foto.getBytes());
-        coffeeEntity.setImage64(imageBase64);
+        coffeeEntity.setImage64(foto.getBytes());
 
         return coffeeRepository.save(coffeeEntity);
     }
