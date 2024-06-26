@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/block/**").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.GET,"/api/coffee/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/coffee/create").hasRole("ADMIN")

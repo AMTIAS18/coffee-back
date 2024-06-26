@@ -4,6 +4,7 @@ import cl.ucm.coffee.persitence.entity.UserEntity;
 import cl.ucm.coffee.persitence.entity.UserRoleEntity;
 import cl.ucm.coffee.persitence.repository.UserRepository;
 import cl.ucm.coffee.persitence.repository.UserRoleRepository;
+import cl.ucm.coffee.service.UserSecurityService;
 import cl.ucm.coffee.service.dto.LoginDto;
 import cl.ucm.coffee.service.dto.UserDto;
 import cl.ucm.coffee.web.config.JwtUtil;
@@ -34,6 +35,8 @@ public class AuthController {
     private UserRepository userRepository;
     @Autowired
     private UserRoleRepository userRoleRepository;
+    @Autowired
+    private UserSecurityService userSecurityService;
 
 //    @Autowired
 //    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
@@ -59,7 +62,7 @@ public class AuthController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserDto userDTO) {
         if (userRepository.existsById(userDTO.getUsername())) {
-            return ResponseEntity.badRequest().body("Username already exists");
+            return ResponseEntity.badRequest().body("El nombre de usuario ya existe");
         }
 
         UserEntity userEntity = new UserEntity();
@@ -82,14 +85,14 @@ public class AuthController {
 
         userRoleRepository.save(userRoleEntity);
 
-        return ResponseEntity.ok("User created successfully with CLIENT role");
+        return ResponseEntity.ok("Usuario creado exitosamente con rol CLIENT");
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UserDto userDTO) {
         UserEntity userEntity = userRepository.findById(userDTO.getUsername()).orElse(null);
         if (userEntity == null) {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.badRequest().body("Usuario no encontrado");
         }
 
         userEntity.setEmail(userDTO.getEmail());
@@ -103,6 +106,18 @@ public class AuthController {
 
         userRepository.save(userEntity);
 
-        return ResponseEntity.ok("User updated successfully");
+        return ResponseEntity.ok("Usuario actualizado exitosamente");
+    }
+
+    @PostMapping("/block/{username}")
+    public ResponseEntity<?> blockUser(@PathVariable String username) {
+        userSecurityService.blockUser(username);
+        return ResponseEntity.ok("Usuario bloqueado exitosamente");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        userSecurityService.invalidateToken(token.replace("Bearer ", ""));
+        return ResponseEntity.ok("Sesion cerrada exitosamente");
     }
 }

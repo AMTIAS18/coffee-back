@@ -13,17 +13,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserSecurityService implements UserDetailsService {
-    @Autowired
-    private  UserRepository userRepository;
 
-//    @Autowired
-//    public UserSecurityService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
+    @Autowired
+    private UserRepository userRepository;
+
+    private Set<String> invalidatedTokens = new HashSet<>();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,30 +39,40 @@ public class UserSecurityService implements UserDetailsService {
                 .password(userEntity.getPassword())
                 .authorities(this.grantedAuthorities(roles))
                 .accountLocked(userEntity.getLocked())
-
                 .disabled(userEntity.getDisabled())
                 .build();
     }
 
+    public void blockUser(String username) {
+        UserEntity user = userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setLocked(true);
+        userRepository.save(user);
+    }
+
+    public void invalidateToken(String token) {
+        invalidatedTokens.add(token);
+    }
+
+    public boolean isTokenInvalidated(String token) {
+        return invalidatedTokens.contains(token);
+    }
+
     private String[] getAuthorities(String role) {
         if ("ADMIN".equals(role) || "CLIENT".equals(role)) {
-            return new String[] {"random_order"};
+            return new String[]{"random_order"};
         }
-
-        return new String[] {};
+        return new String[]{};
     }
 
     private List<GrantedAuthority> grantedAuthorities(String[] roles) {
         List<GrantedAuthority> authorities = new ArrayList<>(roles.length);
-
-        for (String role: roles) {
+        for (String role : roles) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-
-            for (String authority: this.getAuthorities(role)) {
+            for (String authority : this.getAuthorities(role)) {
                 authorities.add(new SimpleGrantedAuthority(authority));
             }
         }
-
         return authorities;
     }
 }

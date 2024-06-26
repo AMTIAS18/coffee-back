@@ -1,5 +1,6 @@
 package cl.ucm.coffee.web.config;
 
+import cl.ucm.coffee.service.UserSecurityService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
     @Autowired
     private  UserDetailsService userDetailsService;
+    @Autowired
+    private UserSecurityService userSecurityService;
 
 //    @Autowired
 //    public JwtFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
@@ -43,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 2. Validar que el JWT sea valido
         String jwt = authHeader.split(" ")[1].trim();
 
-        if (!this.jwtUtil.isValid(jwt)) {
+        if (!this.jwtUtil.isValid(jwt) || userSecurityService.isTokenInvalidated(jwt)) {
             filterChain.doFilter(request, response);
             return;
         }
