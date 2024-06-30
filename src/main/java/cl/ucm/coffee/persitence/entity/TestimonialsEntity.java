@@ -28,13 +28,13 @@ public class TestimonialsEntity {
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_coffee", referencedColumnName = "id_coffee", insertable = false, updatable = false)
-    private CoffeeEntity coffee;
+    //@ManyToOne
+    //@JoinColumn(name = "id_coffee", referencedColumnName = "id_coffee", insertable = false, updatable = false)
+    //private CoffeeEntity coffee;
 
-    @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username",  insertable = false, updatable = false)
-    private UserEntity user;
+    //@ManyToOne
+    //@JoinColumn(name = "username", referencedColumnName = "username",  insertable = false, updatable = false)
+    //private UserEntity user;
 
 
 }
