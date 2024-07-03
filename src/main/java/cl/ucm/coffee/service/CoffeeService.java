@@ -21,9 +21,34 @@ public class CoffeeService {
         coffeeEntity.setName(name);
         coffeeEntity.setPrice(price);
         coffeeEntity.setDescription(description);
-        coffeeEntity.setImage64(foto.getBytes());
+
+        if (foto != null && !foto.isEmpty()) {
+            coffeeEntity.setImage64(foto.getBytes());
+        } else {
+            coffeeEntity.setImage64(null);
+        }
 
         return coffeeRepository.save(coffeeEntity);
+    }
+
+    public CoffeeEntity updateCoffee(int id, String name, String description, int price, MultipartFile foto) throws IOException {
+        Optional<CoffeeEntity> optionalCoffee = coffeeRepository.findById((long) id);
+        if (optionalCoffee.isPresent()) {
+            CoffeeEntity coffeeEntity = optionalCoffee.get();
+            coffeeEntity.setName(name);
+            coffeeEntity.setDescription(description);
+            coffeeEntity.setPrice(price);
+
+            if (foto != null && !foto.isEmpty()) {
+                coffeeEntity.setImage64(foto.getBytes());
+            } else {
+                coffeeEntity.setImage64(null);
+            }
+
+            return coffeeRepository.save(coffeeEntity);
+        } else {
+            throw new RuntimeException("Coffee not found with id: " + id);
+        }
     }
 
     public Optional<CoffeeEntity> findByName(String name) {
@@ -32,10 +57,6 @@ public class CoffeeService {
 
     public List<CoffeeEntity> coffeeList() {
         return coffeeRepository.findAll();
-    }
-
-    public CoffeeEntity updateCoffee(CoffeeEntity coffeeEntity) {
-        return coffeeRepository.save(coffeeEntity);
     }
 
     public void deleteCoffee(int idCoffee) {

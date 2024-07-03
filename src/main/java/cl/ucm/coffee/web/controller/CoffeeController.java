@@ -26,7 +26,7 @@ public class CoffeeController {
             @RequestParam(name = "name") String name,
             @RequestParam(name = "price") int price,
             @RequestParam(name = "desc") String description,
-            @RequestParam(name = "foto") MultipartFile foto) {
+            @RequestPart(name = "foto", required = false) MultipartFile foto) {
 
         try {
             CoffeeEntity createdCoffee = coffeeService.createCoffee(name, price, description, foto);
@@ -66,26 +66,14 @@ public class CoffeeController {
             @RequestParam(name = "name") String name,
             @RequestParam(name = "description") String description,
             @RequestParam(name = "price") int price,
-            @RequestParam(name = "foto",required = false) MultipartFile foto) {
+            @RequestPart(name = "foto", required = false) MultipartFile foto) {
         try {
-            Optional<CoffeeEntity> existingCoffee = coffeeRepository.findById((long) idCoffee);
-            if (existingCoffee.isPresent()) {
-                CoffeeEntity coffeeEntity = existingCoffee.get();
-                coffeeEntity.setName(name);
-                coffeeEntity.setDescription(description);
-                coffeeEntity.setPrice(price);
-
-                if (foto != null && !foto.isEmpty()) {
-                    coffeeEntity.setImage64(foto.getBytes());
-                }
-
-                CoffeeEntity updatedCoffee = coffeeRepository.save(coffeeEntity);
-                return ResponseEntity.ok(updatedCoffee);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            CoffeeEntity updatedCoffee = coffeeService.updateCoffee(idCoffee, name, description, price, foto);
+            return ResponseEntity.ok(updatedCoffee);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Error al actualizar el café: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("Café no encontrado: " + e.getMessage());
         }
     }
 
