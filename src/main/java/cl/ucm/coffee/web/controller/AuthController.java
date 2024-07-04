@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -57,6 +59,22 @@ public class AuthController {
         map.put("token",jwt);
         return ResponseEntity.ok(map);
         //return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwt).build();
+    }
+
+    @GetMapping("/clients")
+    public ResponseEntity<?> listClients() {
+        List<UserEntity> clients = userRepository.findAllByRole("CLIENT");
+        List<UserDto> clientDtos = clients.stream()
+                .map(user -> {
+                    UserDto dto = new UserDto();
+                    dto.setUsername(user.getUsername());
+                    dto.setEmail(user.getEmail());
+                    dto.setLocked(user.getLocked());
+                    dto.setDisabled(user.getDisabled());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientDtos);
     }
 
     @PostMapping("/create")
