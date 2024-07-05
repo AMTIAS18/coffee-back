@@ -20,7 +20,7 @@ public class TestimonialService {
             testimonialRepository.save(testimonialsEntity);
             return ResponseEntity.ok("Testimonial created successfully.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating testimonial: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creando testimonio: " + e.getMessage());
         }
     }
 
@@ -28,11 +28,11 @@ public class TestimonialService {
         try {
             List<TestimonialsEntity> testimonials = testimonialRepository.findByIdCoffee(idCoffee);
             if (testimonials.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No testimonials found for this coffee ID.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay testimonio(s) para este café");
             }
             return ResponseEntity.ok(testimonials);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching testimonials: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al recuperar testimonios: " + e.getMessage());
         }
     }
 }
